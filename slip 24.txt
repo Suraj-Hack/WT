@@ -1,0 +1,109 @@
+Q1)
+<?php
+
+// Function to create student XML file
+function create_student_xml() {
+    // Create XML object
+    $xml = new SimpleXMLElement('<students></students>');
+
+    // Student data
+    $students = array(
+        array('rollno' => '101', 'name' => 'John Doe', 'address' => '123 Main St', 'college' => 'ABC College', 'course' => 'Engineering'),
+        array('rollno' => '102', 'name' => 'Jane Smith', 'address' => '456 Elm St', 'college' => 'XYZ College', 'course' => 'Computer Science'),
+        array('rollno' => '103', 'name' => 'Alice Johnson', 'address' => '789 Oak St', 'college' => 'PQR College', 'course' => 'Engineering'),
+        array('rollno' => '104', 'name' => 'Bob Williams', 'address' => '321 Pine St', 'college' => 'ABC College', 'course' => 'Engineering'),
+        array('rollno' => '105', 'name' => 'Eva Brown', 'address' => '654 Maple St', 'college' => 'XYZ College', 'course' => 'Computer Science')
+    );
+
+    // Add student details to XML
+    foreach ($students as $student) {
+        $stud = $xml->addChild('student');
+        $stud->addChild('rollno', $student['rollno']);
+        $stud->addChild('name', $student['name']);
+        $stud->addChild('address', $student['address']);
+        $stud->addChild('college', $student['college']);
+        $stud->addChild('course', $student['course']);
+    }
+
+    // Save XML to file
+    $xml->asXML('students.xml');
+}
+
+// Function to print student details of a specific course
+function print_students_by_course($course) {
+    // Load XML file
+    $xml = simplexml_load_file('students.xml');
+
+    // Print students of the specified course in tabular format
+    echo "<table border='1'>
+            <tr>
+                <th>Roll No</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>College</th>
+                <th>Course</th>
+            </tr>";
+
+    foreach ($xml->student as $student) {
+        if ((string)$student->course === $course) {
+            echo "<tr>
+                    <td>{$student->rollno}</td>
+                    <td>{$student->name}</td>
+                    <td>{$student->address}</td>
+                    <td>{$student->college}</td>
+                    <td>{$student->course}</td>
+                </tr>";
+        }
+    }
+
+    echo "</table>";
+}
+
+// Create student XML file
+create_student_xml();
+
+// Accept course as input
+$course = isset($_GET['course']) ? $_GET['course'] : '';
+
+// Print students of the specified course
+if (!empty($course)) {
+    echo "<h2>Students enrolled in $course:</h2>";
+    print_students_by_course($course);
+} else {
+    echo "Please provide a course parameter in the URL (e.g., ?course=Engineering)";
+}
+?>
+
+Q2)
+import pandas as pd
+
+# Read the dataset from the provided URL
+url = "https://www.kaggle.com/datasets/datasnaek/youtubenew?select=INvideos.csv"
+try:
+    df = pd.read_csv(url)
+    print("Dataset loaded successfully.")
+except Exception as e:
+    print("Error loading dataset:", e)
+    exit()
+
+# Data cleaning operations
+# Drop rows with missing values in any of the specified columns
+cleaned_df = df.dropna(subset=['views', 'likes', 'dislikes', 'comment_count'])
+
+# Convert views, likes, dislikes, and comment_count columns to numeric type
+cleaned_df['views'] = pd.to_numeric(cleaned_df['views'], errors='coerce')
+cleaned_df['likes'] = pd.to_numeric(cleaned_df['likes'], errors='coerce')
+cleaned_df['dislikes'] = pd.to_numeric(cleaned_df['dislikes'], errors='coerce')
+cleaned_df['comment_count'] = pd.to_numeric(cleaned_df['comment_count'], errors='coerce')
+
+# Calculate total views, total likes, total dislikes, and total comment count
+total_views = cleaned_df['views'].sum()
+total_likes = cleaned_df['likes'].sum()
+total_dislikes = cleaned_df['dislikes'].sum()
+total_comments = cleaned_df['comment_count'].sum()
+
+# Print the results
+print("Total Views:", total_views)
+print("Total Likes:", total_likes)
+print("Total Dislikes:", total_dislikes)
+print("Total Comment Count:", total_comments)

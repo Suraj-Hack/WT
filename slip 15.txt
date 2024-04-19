@@ -1,0 +1,103 @@
+Q1)
+HTML:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggestions</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#searchInput").keyup(function(){
+                var inputText = $(this).val().toLowerCase(); // Get the user input and convert to lowercase
+                $.ajax({
+                    url: "get_suggestions.php", // URL to the server-side script
+                    method: "POST",
+                    data: { inputText: inputText }, // Send user input to the server
+                    success: function(response){
+                        $("#suggestionList").html(response); // Display the suggestions
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Search Suggestions</h2>
+    <input type="text" id="searchInput" placeholder="Type here...">
+    <div id="suggestionList"></div> <!-- Suggestions will be displayed here -->
+</body>
+</html>
+
+JavaScript:
+$(document).ready(function(){
+    $("#searchInput").keyup(function(){
+        var inputText = $(this).val().toLowerCase(); // Get the user input and convert to lowercase
+        $.ajax({
+            url: "get_suggestions.php", // URL to the server-side script
+            method: "POST",
+            data: { inputText: inputText }, // Send user input to the server
+            success: function(response){
+                $("#suggestionList").html(response); // Display the suggestions
+            }
+        });
+    });
+});
+
+<?php
+// Predefined array of suggestions
+$suggestions = array("apple", "banana", "cherry", "orange", "pear", "pineapple");
+
+// Get user input from the AJAX request
+$inputText = strtolower($_POST['inputText']); // Convert user input to lowercase
+
+// Filter suggestions based on user input
+$filteredSuggestions = array_filter($suggestions, function($suggestion) use ($inputText) {
+    return strpos(strtolower($suggestion), $inputText) !== false;
+});
+
+// Display matching suggestions
+if(!empty($filteredSuggestions)) {
+    foreach($filteredSuggestions as $suggestion) {
+        echo "<div>" . $suggestion . "</div>";
+    }
+} else {
+    echo "<div>No suggestions found.</div>";
+}
+?>
+
+Q2)
+import pandas as pd
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Create the dataset
+data = {
+    'No': [1, 2, 3, 4],
+    'Company': ['Tata', 'MG', 'Kia', 'Hyundai'],
+    'Model': ['Nexon', 'Astor', 'Seltos', 'Creta'],
+    'Year': [2017, 2021, 2019, 2015]
+}
+
+# Convert the dataset into a DataFrame
+df = pd.DataFrame(data)
+
+# Convert categorical values into numeric format
+te = TransactionEncoder()
+te_ary = te.fit(df.values.tolist()).transform(df.values.tolist())
+df_encoded = pd.DataFrame(te_ary, columns=te.columns_)
+
+# Apply the Apriori algorithm with different min_support values
+min_support_values = [0.1, 0.2, 0.3]
+for min_support in min_support_values:
+    frequent_itemsets = apriori(df_encoded, min_support=min_support, use_colnames=True)
+    print("Frequent Itemsets with min_support =", min_support)
+    print(frequent_itemsets)
+    print()
+
+    rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1)
+    print("Association Rules with min_support =", min_support)
+    print(rules)
+    print("---------------------------------------------------")
+

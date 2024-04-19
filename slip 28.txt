@@ -1,0 +1,111 @@
+Q1)
+HTML file (index.html):
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Form</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h2>Login Form</h2>
+    <form id="loginForm" action="#" method="post">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br>
+        <input type="submit" value="Login">
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#loginForm').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: 'check_login.php',
+                    data: formData,
+                    success: function(response) {
+                        $('#result').html(response);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+PHP file (check_login.php):
+<?php
+// Database connection
+$servername = "localhost";
+$username = "username";
+$password = "password";
+$dbname = "database_name";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Get form data
+$username = isset($_POST['username']) ? $_POST['username'] : '';
+$password = isset($_POST['password']) ? $_POST['password'] : '';
+
+// Query to check if the username and password are valid
+$sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+$result = $conn->query($sql);
+
+// Check if there is a match
+if ($result->num_rows > 0) {
+    echo "<p style='color: green;'>Login successful!</p>";
+} else {
+    echo "<p style='color: red;'>Invalid username or password.</p>";
+}
+
+$conn->close();
+?>
+
+
+Q2)
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Load the car dataset (assuming it's in a CSV file named 'car_dataset.csv')
+car_data = pd.read_csv('car_dataset.csv')
+
+# Display the first few rows of the dataset
+print("First few rows of the dataset:")
+print(car_data.head())
+
+# Extract features (X) and target variable (y)
+X = car_data[['Horsepower']]  # Feature: Horsepower
+y = car_data['MPG']            # Target variable: Miles per gallon
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Build a linear regression model
+model = LinearRegression()
+
+# Train the model using the training sets
+model.fit(X_train, y_train)
+
+# Make predictions on the testing set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print("\nModel Evaluation:")
+print("Mean Squared Error (MSE):", mse)
+print("R^2 Score:", r2)

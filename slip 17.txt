@@ -1,0 +1,73 @@
+Q1)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <script>
+        // Function to display "Hello Good Morning" message onload
+        window.onload = function() {
+            alert("Hello, Good Morning!");
+        };
+    </script>
+</head>
+<body>
+    <h2>Student Registration Form</h2>
+    <form>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob"><br><br>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select><br><br>
+
+        <label for="course">Course:</label>
+        <input type="text" id="course" name="course" required><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+
+Q2)
+
+pip install nltk gensim
+
+import re
+from nltk.tokenize import sent_tokenize
+from gensim.summarization import summarize
+
+# Sample text paragraph
+text = """
+So, keep working. Keep striving. Never give up. Fall down seven times, get up eight. 
+Ease is a greater threat to progress than hardship. Ease is a greater threat to progress than hardship. 
+So, keep moving, keep growing, keep learning. See you at work.
+"""
+
+# Function to preprocess the text
+def preprocess_text(text):
+    # Remove special characters and digits
+    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    # Convert to lowercase
+    text = text.lower()
+    return text
+
+# Preprocess the text
+preprocessed_text = preprocess_text(text)
+
+# Generate the summary using extractive summarization
+summary = summarize(preprocessed_text)
+
+# Print the summary
+print("Summary:")
+print(summary)

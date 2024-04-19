@@ -1,0 +1,67 @@
+Q1)
+<?php
+// Start the session
+session_start();
+
+// Check if the session variable for page views exists
+if (!isset($_SESSION['page_views'])) {
+    $_SESSION['page_views'] = 1; // If not, initialize it to 1
+} else {
+    $_SESSION['page_views']++; // If it exists, increment it
+}
+
+// Display the number of page views
+echo "You have visited this page ".$_SESSION['page_views']." times.";
+
+// End the session
+session_destroy();
+?>
+
+Q2)
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+# Step 1: Create the Dataset
+data = {
+    'Position': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'Salary': [45000, 50000, 60000, 80000, 110000, 150000, 200000, 300000, 500000, 1000000]
+}
+df = pd.DataFrame(data)
+
+# Step 2: Identify Independent and Target Variables
+X = df[['Position']]  # Independent variable (Position)
+y = df['Salary']       # Target variable (Salary)
+
+# Step 3: Split the Data into Training and Testing Sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)  # 70% training, 30% testing
+
+print("Training set:")
+print("X_train:")
+print(X_train)
+print("\ny_train:")
+print(y_train)
+
+print("\nTesting set:")
+print("X_test:")
+print(X_test)
+print("\ny_test:")
+print(y_test)
+
+# Step 4: Build a Simple Linear Regression Model
+model = LinearRegression()
+
+# Step 5: Train the Model
+model.fit(X_train, y_train)
+
+# Step 6: Evaluate the Model
+train_score = model.score(X_train, y_train)
+test_score = model.score(X_test, y_test)
+
+print("\nModel coefficients:", model.coef_)
+print("Model intercept:", model.intercept_)
+print("Training set score:", train_score)
+print("Testing set score:", test_score)
+
+

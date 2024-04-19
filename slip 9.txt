@@ -1,0 +1,68 @@
+Q1)
+function validateForm() {
+    // Get the username and password input values
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+
+    // Regular expressions for validation
+    var usernameRegex = /^[a-zA-Z0-9_]+$/; // Allows only letters, numbers, and underscore
+    var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // Requires at least one digit, one lowercase and one uppercase letter, and 6-20 characters in total
+
+    // Check if username is valid
+    if (!usernameRegex.test(username)) {
+        alert("Username can only contain letters, numbers, and underscore (_).");
+        return false;
+    }
+
+    // Check if password is valid
+    if (!passwordRegex.test(password)) {
+        alert("Password must contain at least one digit, one lowercase and one uppercase letter, and be 6-20 characters long.");
+        return false;
+    }
+
+    // If both username and password are valid
+    return true;
+}
+
+Q2)
+const transactions = [
+  { id: 1, username: "user1", password: "Password1" },
+  { id: 2, username: "user2", password: "123456" },
+  { id: 3, username: "user3", password: "Pass123" },
+  { id: 4, username: "user4", password: "password" },
+  { id: 5, username: "user5", password: "Password123" }
+];
+
+
+function validateTransactions(transactions) {
+  // Regular expressions for validation
+  var usernameRegex = /^[a-zA-Z0-9_]+$/; // Allows only letters, numbers, and underscore
+  var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // Requires at least one digit, one lowercase and one uppercase letter, and 6-20 characters in total
+
+  // Array to hold invalid transactions
+  var invalidTransactions = [];
+
+  // Loop through each transaction
+  transactions.forEach(transaction => {
+    var username = transaction.username;
+    var password = transaction.password;
+
+    // Check if username is valid
+    if (!usernameRegex.test(username)) {
+      invalidTransactions.push({ id: transaction.id, message: "Invalid username format" });
+    }
+
+    // Check if password is valid
+    if (!passwordRegex.test(password)) {
+      invalidTransactions.push({ id: transaction.id, message: "Invalid password format" });
+    }
+  });
+
+  // Return the array of invalid transactions
+  return invalidTransactions;
+}
+
+// Call the function and display the result
+var invalidTransactions = validateTransactions(transactions);
+console.log("Invalid Transactions:");
+console.log(invalidTransactions);

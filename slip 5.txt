@@ -1,0 +1,72 @@
+Q1)
+<?xml version="1.0" encoding="UTF-8"?>
+<Items>
+    <Item>
+        <Name>Laptop</Name>
+        <Rate>1200</Rate>
+        <Quantity>10</Quantity>
+    </Item>
+    <Item>
+        <Name>Smartphone</Name>
+        <Rate>800</Rate>
+        <Quantity>20</Quantity>
+    </Item>
+    <Item>
+        <Name>Headphones</Name>
+        <Rate>50</Rate>
+        <Quantity>30</Quantity>
+    </Item>
+    <Item>
+        <Name>Mouse</Name>
+        <Rate>20</Rate>
+        <Quantity>50</Quantity>
+    </Item>
+    <Item>
+        <Name>Keyboard</Name>
+        <Rate>30</Rate>
+        <Quantity>40</Quantity>
+    </Item>
+</Items>
+
+Q2)
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+from sklearn.datasets import load_iris
+
+# Load the Iris dataset
+iris = load_iris()
+X = iris.data
+y = iris.target
+
+# Create a DataFrame from the dataset
+df = pd.DataFrame(data=X, columns=iris.feature_names)
+df['Species'] = y
+
+# Basic statistical details of the species
+setosa_stats = df[df['Species'] == 0].describe()
+versicolor_stats = df[df['Species'] == 1].describe()
+virginica_stats = df[df['Species'] == 2].describe()
+
+print("Basic Statistical Details of Iris-setosa:")
+print(setosa_stats)
+print("\nBasic Statistical Details of Iris-versicolor:")
+print(versicolor_stats)
+print("\nBasic Statistical Details of Iris-virginica:")
+print(virginica_stats)
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Apply logistic regression
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Predictions
+y_pred = model.predict(X_test)
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("\nAccuracy of the logistic regression model:", accuracy)

@@ -1,0 +1,75 @@
+Q1)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login</title>
+    <script>
+        function validateForm() {
+            var username = document.forms["loginForm"]["username"].value;
+            var password = document.forms["loginForm"]["password"].value;
+
+            // Check if username is empty
+            if (username == "") {
+                alert("Username must be filled out");
+                return false;
+            }
+
+            // Check if password is empty
+            if (password == "") {
+                alert("Password must be filled out");
+                return false;
+            }
+
+            // Validate password length (minimum 6 characters)
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters long");
+                return false;
+            }
+
+            // Validation passed
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h2>User Login</h2>
+    <form name="loginForm" onsubmit="return validateForm()">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username"><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br><br>
+
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>
+
+Q2)
+pip install pandas nltk matplotlib wordcloud
+
+import pandas as pd
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+
+# Load the dataset
+df = pd.read_csv("movie_review.csv")
+
+# Initialize SentimentIntensityAnalyzer
+sid = SentimentIntensityAnalyzer()
+
+# Calculate sentiment scores for each review
+df['Sentiment'] = df['text'].apply(lambda x: sid.polarity_scores(x)['compound'])
+
+# Generate word cloud
+wordcloud = WordCloud(width=800, height=400, background_color='white').generate(' '.join(df['text']))
+
+# Plot word cloud
+plt.figure(figsize=(10, 6))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.title('Movie Review Word Cloud')
+plt.axis('off')
+plt.show()

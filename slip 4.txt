@@ -1,0 +1,115 @@
+Q1)
+index.php
+
+<?php
+session_start();
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Details</title>
+</head>
+<body>
+    <h2>Employee Details</h2>
+    <form action="earnings.php" method="post">
+        Employee Number: <input type="text" name="eno"><br><br>
+        Employee Name: <input type="text" name="ename"><br><br>
+        Address: <input type="text" name="address"><br><br>
+        <input type="submit" value="Next">
+    </form>
+</body>
+</html>
+
+earnings.php
+
+<?php
+session_start();
+
+// Save employee details in session
+$_SESSION['eno'] = $_POST['eno'];
+$_SESSION['ename'] = $_POST['ename'];
+$_SESSION['address'] = $_POST['address'];
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Earnings Details</title>
+</head>
+<body>
+    <h2>Earnings Details</h2>
+    <form action="employee_info.php" method="post">
+        Basic: <input type="text" name="basic"><br><br>
+        DA: <input type="text" name="da"><br><br>
+        HRA: <input type="text" name="hra"><br><br>
+        <input type="submit" value="Next">
+    </form>
+</body>
+</html>
+
+employee_info.php
+
+<?php
+session_start();
+
+// Save earning details in session
+$_SESSION['basic'] = $_POST['basic'];
+$_SESSION['da'] = $_POST['da'];
+$_SESSION['hra'] = $_POST['hra'];
+
+// Calculate total earnings
+$total = $_SESSION['basic'] + $_SESSION['da'] + $_SESSION['hra'];
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Information</title>
+</head>
+<body>
+    <h2>Employee Information</h2>
+    <p>Employee Number: <?php echo $_SESSION['eno']; ?></p>
+    <p>Employee Name: <?php echo $_SESSION['ename']; ?></p>
+    <p>Address: <?php echo $_SESSION['address']; ?></p>
+    <p>Basic: <?php echo $_SESSION['basic']; ?></p>
+    <p>DA: <?php echo $_SESSION['da']; ?></p>
+    <p>HRA: <?php echo $_SESSION['hra']; ?></p>
+    <p>Total Earnings: <?php echo $total; ?></p>
+</body>
+</html>
+
+Q2)
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Step 1: Load the Dataset
+# Let's assume you have a CSV file named 'fish_data.csv' with columns 'Species' and 'Weight'
+df = pd.read_csv('fish_data.csv')
+
+# Step 2: Preprocess the Data
+# Assuming no preprocessing is needed here
+
+# Extracting features (Species) and target variable (Weight)
+X = df[['Species']]
+y = df['Weight']
+
+# Step 3: Split the Data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 4: Build the Linear Regression Model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Step 5: Evaluate the Model
+y_pred = model.predict(X_test)
+
+# Calculate evaluation metrics
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print("Mean Squared Error:", mse)
+print("R-squared Score:", r2)

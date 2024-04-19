@@ -1,0 +1,118 @@
+Q1)
+index.php
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Change Preferences</title>
+</head>
+<body>
+    <h2>Change Preferences</h2>
+    <form action="set_preferences.php" method="post">
+        Font Style:
+        <select name="font_style">
+            <option value="Arial">Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Verdana">Verdana</option>
+        </select><br><br>
+        Font Size:
+        <select name="font_size">
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+        </select><br><br>
+        Font Color:
+        <input type="color" name="font_color"><br><br>
+        Background Color:
+        <input type="color" name="bg_color"><br><br>
+        <input type="submit" value="Save Preferences">
+    </form>
+</body>
+</html>
+
+set_preferences.php
+
+<?php
+// Set preferences in cookies
+setcookie('font_style', $_POST['font_style'], time() + (86400 * 30), "/"); // 86400 = 1 day
+setcookie('font_size', $_POST['font_size'], time() + (86400 * 30), "/");
+setcookie('font_color', $_POST['font_color'], time() + (86400 * 30), "/");
+setcookie('bg_color', $_POST['bg_color'], time() + (86400 * 30), "/");
+
+// Redirect to the next page to display selected settings
+header("Location: display_preferences.php");
+?>
+
+display_preferences.php
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Preferences</title>
+</head>
+<body>
+    <h2>Selected Preferences</h2>
+    <p>Font Style: <?php echo $_COOKIE['font_style']; ?></p>
+    <p>Font Size: <?php echo $_COOKIE['font_size']; ?></p>
+    <p>Font Color: <span style="color: <?php echo $_COOKIE['font_color']; ?>">Sample Text</span></p>
+    <p>Background Color: <span style="background-color: <?php echo $_COOKIE['bg_color']; ?>;">Sample Background</span></p>
+    <a href="implement_preferences.php">Continue to Implementation</a>
+</body>
+</html>
+
+implement_preferences.php
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Implementation</title>
+</head>
+<body style="font-family: <?php echo $_COOKIE['font_style']; ?>;
+             font-size: <?php echo $_COOKIE['font_size']; ?>;
+             color: <?php echo $_COOKIE['font_color']; ?>;
+             background-color: <?php echo $_COOKIE['bg_color']; ?>;">
+    <h2>Implementation with New Settings</h2>
+    <p>This page demonstrates the implementation of the selected preferences.</p>
+</body>
+</html>
+
+Q2)
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+# Step 1: Create the Dataset
+# Let's create a simple dataset with years of experience as independent variable and salary as target variable
+years_of_experience = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).reshape(-1, 1)
+salary = np.array([45000, 50000, 60000, 80000, 110000, 150000, 200000, 300000, 500000, 1000000])
+
+# Step 2: Identify Independent and Target Variables
+X = years_of_experience  # Independent variable (Years of experience)
+y = salary               # Target variable (Salary)
+
+# Step 3: Split the Data into Training and Testing Sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)  # 80% training, 20% testing
+
+# Print the training and testing sets
+print("Training set:")
+print("X_train:")
+print(X_train)
+print("\ny_train:")
+print(y_train)
+
+print("\nTesting set:")
+print("X_test:")
+print(X_test)
+print("\ny_test:")
+print(y_test)
+
+# Step 4: Build a Simple Linear Regression Model
+model = LinearRegression()
+
+# Step 5: Train the Model
+model.fit(X_train, y_train)
+
+# Print the coefficients
+print("\nModel coefficients:", model.coef_)
+print("Model intercept:", model.intercept_)
+

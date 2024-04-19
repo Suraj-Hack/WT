@@ -1,0 +1,98 @@
+Q1)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Number Operations</title>
+</head>
+<body>
+    <h2>Number Operations</h2>
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        Enter a number:
+        <input type="number" name="number" required>
+        <br><br>
+        <input type="submit" name="submit" value="Submit">
+    </form>
+
+    <?php
+    // Function to generate Fibonacci series
+    function generateFibonacci($n) {
+        $fibonacci = [];
+        $fibonacci[0] = 0;
+        $fibonacci[1] = 1;
+
+        for ($i = 2; $i < $n; $i++) {
+            $fibonacci[$i] = $fibonacci[$i - 1] + $fibonacci[$i - 2];
+        }
+
+        return $fibonacci;
+    }
+
+    // Function to find sum of digits
+    function sumOfDigits($number) {
+        $sum = 0;
+        while ($number != 0) {
+            $sum += $number % 10;
+            $number = (int)($number / 10);
+        }
+        return $sum;
+    }
+
+    // Process form data
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $number = $_POST["number"];
+
+        // Generate Fibonacci series
+        echo "<h3>Fibonacci Series:</h3>";
+        $fibonacci_series = generateFibonacci($number);
+        echo implode(", ", $fibonacci_series) . "<br><br>";
+
+        // Find sum of digits
+        echo "<h3>Sum of Digits:</h3>";
+        $sum = sumOfDigits($number);
+        echo "Sum of digits of $number is: $sum";
+    }
+    ?>
+</body>
+</html>
+
+Q2)
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Load the student score dataset (assuming it's in a CSV file named 'student_scores.csv')
+student_data = pd.read_csv('student_scores.csv')
+
+# Display the first few rows of the dataset
+print("First few rows of the dataset:")
+print(student_data.head())
+
+# Extract features (X) and target variable (y)
+X = student_data[['Hours']]  # Feature: Hours studied
+y = student_data['Pass']     # Target variable: Pass or Fail
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Build a logistic regression model
+model = LogisticRegression()
+
+# Train the model using the training sets
+model.fit(X_train, y_train)
+
+# Make predictions on the testing set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+classification_rep = classification_report(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+print("\nModel Evaluation:")
+print("Accuracy:", accuracy)
+print("\nClassification Report:")
+print(classification_rep)
+print("\nConfusion Matrix:")
+print(conf_matrix)

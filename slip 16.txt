@@ -1,0 +1,113 @@
+Q1)
+XML File (books.xml):
+
+<?xml version="1.0" encoding="UTF-8"?>
+<books>
+    <book>
+        <title>The Great Gatsby</title>
+        <author>F. Scott Fitzgerald</author>
+        <year>1925</year>
+        <price>10.99</price>
+    </book>
+    <book>
+        <title>To Kill a Mockingbird</title>
+        <author>Harper Lee</author>
+        <year>1960</year>
+        <price>12.50</price>
+    </book>
+    <!-- Add more book entries as needed -->
+</books>
+
+HTML and JavaScript (index.html):
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#bookSelect").change(function(){
+                var selectedBook = $(this).val();
+                $.ajax({
+                    url: "get_book_details.php", // Assuming PHP script for server-side processing
+                    method: "POST",
+                    data: { selectedBook: selectedBook },
+                    success: function(response){
+                        $("#bookDetails").html(response);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Select a Book</h2>
+    <label for="bookSelect">Select Book:</label>
+    <select id="bookSelect">
+        <option value="">Select a book</option>
+        <option value="The Great Gatsby">The Great Gatsby</option>
+        <option value="To Kill a Mockingbird">To Kill a Mockingbird</option>
+        <!-- Add more book options as needed -->
+    </select>
+    <div id="bookDetails"></div>
+</body>
+</html>
+
+PHP Script (get_book_details.php):
+
+<?php
+// Load the XML file
+$xml = simplexml_load_file("books.xml");
+
+// Get the selected book from the AJAX request
+$selectedBook = $_POST['selectedBook'];
+
+// Search for the selected book in the XML
+$bookDetails = "";
+foreach ($xml->book as $book) {
+    if ($book->title == $selectedBook) {
+        $bookDetails .= "<p>Title: " . $book->title . "</p>";
+        $bookDetails .= "<p>Author: " . $book->author . "</p>";
+        $bookDetails .= "<p>Year: " . $book->year . "</p>";
+        $bookDetails .= "<p>Price: $" . $book->price . "</p>";
+        break; // Stop searching once the book is found
+    }
+}
+
+echo $bookDetails;
+?>
+
+Q2)
+pip install nltk gensim
+
+import re
+from nltk.tokenize import sent_tokenize
+from gensim.summarization import summarize
+
+# Sample text paragraph
+text = """
+Natural Language Processing (NLP) is a subfield of artificial intelligence that focuses on the interaction between computers and humans through natural language. 
+It enables computers to understand, interpret, and generate human language in a valuable way. 
+NLP techniques are used in various applications, including machine translation, sentiment analysis, chatbots, and text summarization.
+"""
+
+# Function to preprocess the text
+def preprocess_text(text):
+    # Remove special characters and digits
+    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    # Convert to lowercase
+    text = text.lower()
+    return text
+
+# Preprocess the text
+preprocessed_text = preprocess_text(text)
+
+# Generate the summary using extractive summarization
+summary = summarize(preprocessed_text)
+
+# Print the summary
+print("Summary:")
+print(summary)

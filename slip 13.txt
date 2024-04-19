@@ -1,0 +1,45 @@
+Q1)
+HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greeting</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#nameInput").keyup(function(){
+                var name = $(this).val();
+                $.ajax({
+                    url: "greet.php", // Assuming the server script is named greet.php
+                    method: "POST",
+                    data: { name: name },
+                    success: function(response){
+                        $("#greeting").text(response);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Greeting</h2>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <p id="greeting">Stranger, please tell me your name!</p>
+</body>
+</html>
+
+PHP (greet.php):
+
+<?php
+$name = isset($_POST['name']) ? $_POST['name'] : '';
+
+if (empty($name)) {
+    echo "Stranger, please tell me your name!";
+} elseif (in_array($name, array("Rohit", "Virat", "Dhoni", "Ashwin", "Harbhajan"))) {
+    echo "Hello, master!";
+} else {
+    echo "I don't know you!";
+}
+?>

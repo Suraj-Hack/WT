@@ -1,0 +1,67 @@
+Q1)
+CREATE TABLE student (
+    rollno INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    class VARCHAR(50)
+);
+
+
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class StudentController extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->database(); // Load the database library
+    }
+
+    public function insert_records() {
+        // Insert 5 records into the student table
+        $data = array(
+            array('name' => 'John Doe', 'class' => '10th'),
+            array('name' => 'Jane Smith', 'class' => '9th'),
+            array('name' => 'Alice Johnson', 'class' => '12th'),
+            array('name' => 'Bob Williams', 'class' => '11th'),
+            array('name' => 'Eva Brown', 'class' => '10th')
+        );
+
+        $this->db->insert_batch('student', $data);
+
+        echo "Records inserted successfully!";
+    }
+
+}
+
+
+Q2)
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+# Sample text paragraph
+paragraph = """
+Natural language processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence 
+concerned with the interactions between computers and human language, in particular how to program computers 
+to process and analyze large amounts of natural language data. Stopwords are common words that are often removed 
+from text data as they usually don't carry significant meaning in the context of natural language processing tasks.
+"""
+
+# Download stopwords data if not already downloaded
+nltk.download('stopwords')
+nltk.download('punkt')
+
+# Tokenize the paragraph into words
+words = word_tokenize(paragraph)
+
+# Get the set of English stopwords
+english_stopwords = set(stopwords.words('english'))
+
+# Remove stopwords from the paragraph
+filtered_paragraph = [word for word in words if word.lower() not in english_stopwords]
+
+# Join the filtered words back into a paragraph
+filtered_paragraph_text = ' '.join(filtered_paragraph)
+
+print(filtered_paragraph_text)
+

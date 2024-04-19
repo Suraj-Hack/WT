@@ -1,0 +1,52 @@
+Q1)
+// Display alert message
+alert('Exams are near, have you started preparing for?');
+
+// Accepting two numbers from the user using prompt
+var num1 = prompt('Enter the first number:');
+var num2 = prompt('Enter the second number:');
+
+// Convert the input strings to numbers
+num1 = parseFloat(num1);
+num2 = parseFloat(num2);
+
+// Check if the inputs are valid numbers
+if (!isNaN(num1) && !isNaN(num2)) {
+    // Calculate the sum of the two numbers
+    var sum = num1 + num2;
+    // Display the result using a confirm box
+    confirm('The addition of ' + num1 + ' and ' + num2 + ' is: ' + sum);
+} else {
+    // Display an error message if inputs are not valid numbers
+    alert('Invalid input. Please enter valid numbers.');
+}
+
+Q2)
+import pandas as pd
+from mlxtend.frequent_patterns import apriori
+from mlxtend.frequent_patterns import association_rules
+
+# Step 1: Read the dataset
+df = pd.read_csv("path_to_your_dataset.csv")  # Replace "path_to_your_dataset.csv" with the actual path
+
+# Step 2: Display information
+print("Dataset Information:")
+print(df.info())
+
+# Step 3: Preprocess the data
+df.dropna(inplace=True)  # Drop null values
+
+# Step 4: Convert categorical values to numeric
+# Example: One-hot encoding
+df_encoded = pd.get_dummies(df)
+
+# Step 5: Apply Apriori algorithm
+frequent_itemsets = apriori(df_encoded, min_support=0.1, use_colnames=True)
+rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1)
+
+# Display frequent itemsets and association rules
+print("Frequent Itemsets:")
+print(frequent_itemsets)
+
+print("\nAssociation Rules:")
+print(rules)

@@ -1,0 +1,166 @@
+Q1)
+HTML file (index.html):
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Voter Details</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h2>Voter Details Form</h2>
+    <form id="voterForm" action="#" method="post">
+        <label for="name">Name (Upper case only):</label><br>
+        <input type="text" id="name" name="name"><br>
+        <label for="age">Age (>= 18):</label><br>
+        <input type="number" id="age" name="age" min="18"><br>
+        <label for="nationality">Nationality (Indian only):</label><br>
+        <input type="text" id="nationality" name="nationality" value="Indian"><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#voterForm').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: 'validate.php',
+                    data: formData,
+                    success: function(response) {
+                        $('#result').html(response);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+PHP file (validate.php):
+
+<?php
+// Function to validate voter details
+function validateVoterDetails($name, $age, $nationality) {
+    $errors = array();
+
+    // Validate name (should be in upper case letters only)
+    if ($name !== strtoupper($name)) {
+        $errors[] = "Name should be in upper case letters only.";
+    }
+
+    // Validate age (should be >= 18)
+    if ($age < 18) {
+        $errors[] = "Age should not be less than 18 years.";
+    }
+
+    // Validate nationality (should be Indian only)
+    if (strtolower($nationality) !== 'indian') {
+        $errors[] = "Nationality should be Indian only.";
+    }
+
+    return $errors;
+}
+
+// Get form data
+$name = isset($_POST['name']) ? $_POST['name'] : '';
+$age = isset($_POST['age']) ? $_POST['age'] : 0;
+$nationality = isset($_POST['nationality']) ? $_POST['nationality'] : '';
+
+// Validate voter details
+$errors = validateVoterDetails($name, $age, $nationality);
+
+// Output validation result
+if (empty($errors)) {
+    echo "<p style='color: green;'>Voter details validated successfully!</p>";
+} else {
+    foreach ($errors as $error) {
+        echo "<p style='color: red;'>$error</p>";
+    }
+}
+?>
+
+Q2)
+HTML file (index.html):<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction Details</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h2>Transaction Details Form</h2>
+    <form id="transactionForm" action="#" method="post">
+        <label for="transactionId">Transaction ID:</label><br>
+        <input type="text" id="transactionId" name="transactionId"><br>
+        <label for="customerName">Customer Name (Upper case only):</label><br>
+        <input type="text" id="customerName" name="customerName"><br>
+        <label for="transactionAmount">Transaction Amount:</label><br>
+        <input type="number" id="transactionAmount" name="transactionAmount" min="0"><br>
+        <label for="country">Country (Indian only):</label><br>
+        <input type="text" id="country" name="country" value="India"><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#transactionForm').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: 'validate.php',
+                    data: formData,
+                    success: function(response) {
+                        $('#result').html(response);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+PHP file (validate.php):
+<?php
+// Function to validate transaction details
+function validateTransactionDetails($transactionId, $customerName, $transactionAmount, $country) {
+    $errors = array();
+
+    // Validate customer name (should be in upper case letters only)
+    if ($customerName !== strtoupper($customerName)) {
+        $errors[] = "Customer name should be in upper case letters only.";
+    }
+
+    // Validate country (should be Indian only)
+    if (strtolower($country) !== 'india') {
+        $errors[] = "Country should be Indian only.";
+    }
+
+    return $errors;
+}
+
+// Get form data
+$transactionId = isset($_POST['transactionId']) ? $_POST['transactionId'] : '';
+$customerName = isset($_POST['customerName']) ? $_POST['customerName'] : '';
+$transactionAmount = isset($_POST['transactionAmount']) ? $_POST['transactionAmount'] : 0;
+$country = isset($_POST['country']) ? $_POST['country'] : '';
+
+// Validate transaction details
+$errors = validateTransactionDetails($transactionId, $customerName, $transactionAmount, $country);
+
+// Output validation result
+if (empty($errors)) {
+    echo "<p style='color: green;'>Transaction details validated successfully!</p>";
+} else {
+    foreach ($errors as $error) {
+        echo "<p style='color: red;'>$error</p>";
+    }
+}
+?>

@@ -1,0 +1,73 @@
+Q1)
+import xml.etree.ElementTree as ET
+
+# Create root element
+root = ET.Element("Bookstore")
+
+# Create categories
+categories = {
+    "Yoga": [
+        {"title": "Yoga Anatomy", "author": "Leslie Kaminoff", "price": "$20"},
+        {"title": "The Heart of Yoga", "author": "T.K.V. Desikachar", "price": "$15"}
+    ],
+    "Story": [
+        {"title": "Harry Potter and the Philosopher's Stone", "author": "J.K. Rowling", "price": "$25"},
+        {"title": "The Alchemist", "author": "Paulo Coelho", "price": "$18"}
+    ],
+    "Technical": [
+        {"title": "Clean Code", "author": "Robert C. Martin", "price": "$30"},
+        {"title": "Introduction to Algorithms", "author": "Thomas H. Cormen", "price": "$40"}
+    ]
+}
+
+# Add books to each category
+for category, books in categories.items():
+    category_element = ET.SubElement(root, category)
+    for book in books:
+        book_element = ET.SubElement(category_element, "Book")
+        title_element = ET.SubElement(book_element, "Book_Title")
+        title_element.text = book["title"]
+        author_element = ET.SubElement(book_element, "Book_Author")
+        author_element.text = book["author"]
+        price_element = ET.SubElement(book_element, "Book_Price")
+        price_element.text = book["price"]
+
+# Create and save the XML file
+tree = ET.ElementTree(root)
+tree.write("Bookcategory.xml")
+
+print("XML file 'Bookcategory.xml' created successfully.")
+
+Q2)
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Given dataset
+transactions = [['eggs', 'milk', 'bread'],
+                ['eggs', 'apple'],
+                ['milk', 'bread'],
+                ['apple', 'milk'],
+                ['milk', 'apple', 'bread']]
+
+# Initialize TransactionEncoder
+encoder = TransactionEncoder()
+
+# Fit the encoder and transform the dataset
+onehot = encoder.fit(transactions).transform(transactions)
+
+# Convert the one-hot encoded dataset to DataFrame
+df = pd.DataFrame(onehot, columns=encoder.columns_)
+
+# Apply Apriori algorithm to generate frequent itemsets
+frequent_itemsets = apriori(df, min_support=0.2, use_colnames=True)
+
+# Print frequent itemsets
+print("Frequent Itemsets:")
+print(frequent_itemsets)
+
+# Generate association rules
+association_rules_df = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
+
+# Print association rules
+print("\nAssociation Rules:")
+print(association_rules_df)

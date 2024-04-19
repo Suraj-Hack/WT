@@ -1,0 +1,109 @@
+Q1)
+HTML:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Teacher Details</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#teacherSelect").change(function(){
+                var teacherId = $(this).val();
+                $.ajax({
+                    url: "get_teacher_details.php",
+                    method: "POST",
+                    data: { teacherId: teacherId },
+                    success: function(response){
+                        $("#teacherDetails").html(response);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Select Teacher Details</h2>
+    <label for="teacherSelect">Select Teacher:</label>
+    <select id="teacherSelect">
+        <option value="">Select a teacher</option>
+        <option value="1">Teacher 1</option>
+        <option value="2">Teacher 2</option>
+        <!-- Add more options as needed -->
+    </select>
+    <div id="teacherDetails"></div>
+</body>
+</html>
+
+JavaScript:
+$(document).ready(function(){
+    $("#teacherSelect").change(function(){
+        var teacherId = $(this).val();
+        $.ajax({
+            url: "get_teacher_details.php",
+            method: "POST",
+            data: { teacherId: teacherId },
+            success: function(response){
+                $("#teacherDetails").html(response);
+            }
+        });
+    });
+});
+
+<?php
+// Assuming you have a database connection established
+
+// Check if teacherId is set and not empty
+if(isset($_POST['teacherId']) && !empty($_POST['teacherId'])) {
+    $teacherId = $_POST['teacherId'];
+
+    // Perform database query to fetch teacher details
+    // Replace 'your_database_table' with the actual name of your TEACHER table
+    // Replace 'your_database_connection' with your actual database connection
+    $query = "SELECT * FROM your_database_table WHERE tno = $teacherId";
+    $result = mysqli_query(your_database_connection, $query);
+
+    if($result && mysqli_num_rows($result) > 0) {
+        // Display teacher details
+        $row = mysqli_fetch_assoc($result);
+        echo "Teacher Name: " . $row['tname'] . "<br>";
+        echo "Qualification: " . $row['qualification'] . "<br>";
+        echo "Salary: " . $row['salary'];
+    } else {
+        echo "Teacher details not found.";
+    }
+} else {
+    echo "Please select a teacher.";
+}
+?>
+
+Q2)
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Define the dataset
+dataset = [
+    ["apple", "mango", "banana"],
+    ["mango", "banana", "cabbage", "carrots"],
+    ["mango", "banana", "carrots"],
+    ["mango", "carrots"]
+]
+
+# Convert categorical values into numeric format
+te = TransactionEncoder()
+te_ary = te.fit(dataset).transform(dataset)
+df = pd.DataFrame(te_ary, columns=te.columns_)
+
+# Apply the Apriori algorithm with different min_support values
+min_support_values = [0.1, 0.2, 0.3]
+for min_support in min_support_values:
+    frequent_itemsets = apriori(df, min_support=min_support, use_colnames=True)
+    print("Frequent Itemsets with min_support =", min_support)
+    print(frequent_itemsets)
+    print()
+
+    rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1)
+    print("Association Rules with min_support =", min_support)
+    print(rules)
+    print("---------------------------------------------------")

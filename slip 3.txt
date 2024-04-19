@@ -1,0 +1,91 @@
+Q1)
+<?php
+session_start();
+
+// Initialize variables
+$correct_username = "admin";
+$correct_password = "password";
+$max_attempts = 3;
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Increment the attempt count
+    if (!isset($_SESSION['attempt_count'])) {
+        $_SESSION['attempt_count'] = 1;
+    } else {
+        $_SESSION['attempt_count']++;
+    }
+    
+    // Check if attempt count is within the limit
+    if ($_SESSION['attempt_count'] <= $max_attempts) {
+        // Check if username and password are correct
+        if ($_POST['username'] == $correct_username && $_POST['password'] == $correct_password) {
+            // Display welcome message and form
+            echo "<h2>Welcome!</h2>";
+            echo "<p>Welcome message goes here...</p>";
+        } else {
+            // Display error message
+            echo "<p>Incorrect username or password. Please try again.</p>";
+            echo "<p>Attempt ".$_SESSION['attempt_count']." out of ".$max_attempts.".</p>";
+            echo "<form method='post' action='".$_SERVER["PHP_SELF"]."'>
+                    Username: <input type='text' name='username'><br><br>
+                    Password: <input type='password' name='password'><br><br>
+                    <input type='submit' value='Login'>
+                  </form>";
+        }
+    } else {
+        // Display error message if maximum attempts reached
+        echo "<p>Maximum login attempts reached. Please try again later.</p>";
+    }
+} else {
+    // Display initial login form
+    echo "<form method='post' action='".$_SERVER["PHP_SELF"]."'>
+            Username: <input type='text' name='username'><br><br>
+            Password: <input type='password' name='password'><br><br>
+            <input type='submit' value='Login'>
+          </form>";
+}
+?>
+
+Q2)
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Step 1: Create the 'User' Dataset
+data = {
+    'User ID': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'Gender': ['Male', 'Female', 'Male', 'Female', 'Male', 'Female', 'Male', 'Female', 'Male', 'Female'],
+    'Age': [25, 35, 45, 30, 20, 50, 55, 40, 60, 50],
+    'Estimated Salary': [30000, 50000, 70000, 60000, 80000, 45000, 90000, 75000, 100000, 85000],
+    'Purchased': [0, 1, 0, 1, 0, 1, 1, 0, 1, 1]  # 0: Not purchased, 1: Purchased
+}
+df = pd.DataFrame(data)
+
+# Step 2: Identify Independent and Target Variables
+X = df[['Age', 'Estimated Salary']]  # Independent variables
+y = df['Purchased']                   # Target variable
+
+# Step 3: Split the Data into Training and Testing Sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 4: Feature Scaling (Optional but recommended for logistic regression)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Step 5: Build and Train the Logistic Regression Model
+model = LogisticRegression()
+model.fit(X_train_scaled, y_train)
+
+# Step 6: Predictions and Evaluation
+y_pred = model.predict(X_test_scaled)
+
+# Step 7: Print Evaluation Metrics
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))

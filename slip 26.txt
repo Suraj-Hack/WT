@@ -1,0 +1,123 @@
+Q1)
+Create the HTML file (index.html):
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Details</title>
+</head>
+<body>
+    <label for="employeeSelect">Select Employee:</label>
+    <select id="employeeSelect" onchange="getEmployeeDetails()">
+        <!-- Options will be populated dynamically using Ajax -->
+    </select>
+    <br>
+    <div id="employeeDetails"></div>
+
+    <script>
+        function getEmployeeDetails() {
+            var selectedEmployee = document.getElementById("employeeSelect").value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "getEmployeeDetails.php?ename=" + selectedEmployee, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById("employeeDetails").innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send();
+        }
+    </script>
+</body>
+</html>
+
+Create the PHP script (getEmployeeDetails.php):
+
+<?php
+// Database connection
+$servername = "localhost";
+$username = "username";
+$password = "password";
+$dbname = "database_name";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch employee details based on selected employee name
+$ename = $_GET['ename'];
+$sql = "SELECT * FROM EMP WHERE ename = '$ename'";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Output data of each row
+    while ($row = $result->fetch_assoc()) {
+        echo "Employee Number: " . $row["eno"] . "<br>";
+        echo "Employee Name: " . $row["ename"] . "<br>";
+        echo "Designation: " . $row["designation"] . "<br>";
+        echo "Salary: " . $row["salary"] . "<br>";
+    }
+} else {
+    echo "0 results";
+}
+$conn->close();
+?>
+
+Create the database table EMP:
+
+CREATE TABLE EMP (
+    eno INT AUTO_INCREMENT PRIMARY KEY,
+    ename VARCHAR(255),
+    designation VARCHAR(255),
+    salary DECIMAL(10, 2)
+);
+
+Q2)
+import re
+from nltk.tokenize import sent_tokenize
+
+# Text paragraph
+text = """Hello all, Welcome to Python Programming Academy. Python Programming Academy is a nice platform to learn new programming skills. It is difficult to get enrolled in this Academy."""
+
+# Function to preprocess the text
+def preprocess_text(text):
+    # Remove special characters and digits using regex
+    processed_text = re.sub(r'[^a-zA-Z\s]', '', text)
+    # Remove extra whitespaces
+    processed_text = re.sub(r'\s+', ' ', processed_text)
+    # Convert to lowercase
+    processed_text = processed_text.lower()
+    return processed_text
+
+# Function to generate summary using extractive summarization
+def generate_summary(text, num_sentences=2):
+    # Tokenize the text into sentences
+    sentences = sent_tokenize(text)
+    
+    # Preprocess the sentences
+    preprocessed_sentences = [preprocess_text(sentence) for sentence in sentences]
+    
+    # Calculate score for each sentence based on word count
+    scores = [len(sentence.split()) for sentence in preprocessed_sentences]
+    
+    # Sort the sentences based on scores
+    sorted_sentences = [sentence for _, sentence in sorted(zip(scores, sentences), reverse=True)]
+    
+    # Take top 'num_sentences' sentences as summary
+    summary = ' '.join(sorted_sentences[:num_sentences])
+    
+    return summary
+
+# Preprocess the text
+cleaned_text = preprocess_text(text)
+
+# Generate summary
+summary = generate_summary(cleaned_text)
+
+# Print the summary
+print("Summary:")
+print(summary)

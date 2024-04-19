@@ -1,0 +1,106 @@
+Q1)
+HTML:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact List</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <h2>Contact List</h2>
+    <button id="printBtn">Print Contacts</button>
+    <table id="contactTable" border="1">
+        <thead>
+            <tr>
+                <th>Sr. No.</th>
+                <th>Name</th>
+                <th>Residence Number</th>
+                <th>Mobile Number</th>
+                <th>Address</th>
+            </tr>
+        </thead>
+        <tbody id="contactBody">
+            <!-- Contact details will be displayed here -->
+        </tbody>
+    </table>
+</body>
+</html>
+
+JavaScript (script.js):
+$(document).ready(function(){
+    $("#printBtn").click(function(){
+        $.ajax({
+            url: "contact.dat",
+            type: "GET",
+            dataType: "text",
+            success: function(data) {
+                // Split the data into lines
+                var lines = data.split("\n");
+                // Remove any empty lines
+                lines = lines.filter(function(line) {
+                    return line.trim() !== "";
+                });
+                // Remove any leading/trailing spaces from each line
+                lines = lines.map(function(line) {
+                    return line.trim();
+                });
+
+                var tableBody = $("#contactBody");
+                // Clear existing table rows
+                tableBody.empty();
+
+                // Iterate over each line and create table rows
+                lines.forEach(function(line) {
+                    var fields = line.split(",");
+                    var row = $("<tr>");
+                    fields.forEach(function(field) {
+                        row.append("<td>" + field + "</td>");
+                    });
+                    tableBody.append(row);
+                });
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                alert("Error reading contact.dat file: " + errorThrown);
+            }
+        });
+    });
+});
+
+Q2)
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+# Step 1: Create the 'heights-and-weights' dataset
+np.random.seed(0)
+num_samples = 100
+heights = np.random.normal(loc=160, scale=10, size=num_samples)  # Mean height = 160 cm, standard deviation = 10 cm
+weights = 0.5 * heights + np.random.normal(loc=0, scale=5, size=num_samples)  # Weight = 0.5 * height + noise
+
+# Step 2: Identify independent and target variables
+X = heights.reshape(-1, 1)  # Independent variable (heights)
+y = weights  # Target variable (weights)
+
+# Step 3: Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Print the training and testing sets
+print("Training set - X (heights):")
+print(X_train[:5])  # Print first 5 samples
+print("Training set - y (weights):")
+print(y_train[:5])  # Print first 5 samples
+print("Testing set - X (heights):")
+print(X_test[:5])   # Print first 5 samples
+print("Testing set - y (weights):")
+print(y_test[:5])   # Print first 5 samples
+
+# Step 4: Build a simple linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Print the coefficients (slope and intercept)
+print("Slope:", model.coef_[0])
+print("Intercept:", model.intercept_)

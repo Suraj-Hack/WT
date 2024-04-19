@@ -1,0 +1,113 @@
+Q1)
+from xml.etree.ElementTree import Element, SubElement, tostring, ElementTree
+
+# Function to create cricket.xml file with the provided structure
+def create_cricket_xml():
+    # Create the root element
+    cricket_team = Element("CricketTeam")
+
+    # Add Team element for country="Australia"
+    team_australia = SubElement(cricket_team, "Team", country="Australia")
+    player_australia = SubElement(team_australia, "player")
+    player_australia.text = "Player Name"
+    runs_australia = SubElement(team_australia, "runs")
+    runs_australia.text = "200"
+    wicket_australia = SubElement(team_australia, "wicket")
+    wicket_australia.text = "4"
+
+    # Create the XML tree
+    tree = ElementTree(cricket_team)
+
+    # Write the tree to the cricket.xml file
+    tree.write("cricket.xml")
+
+    print("cricket.xml file created successfully.")
+
+# Function to add multiple elements of category country="India" to cricket.xml file
+def add_elements_for_india():
+    # Load the XML file
+    tree = ElementTree()
+    tree.parse("cricket.xml")
+    root = tree.getroot()
+
+    # Add Team element for country="India"
+    team_india = SubElement(root, "Team", country="India")
+    player_india = SubElement(team_india, "player")
+    player_india.text = "Player 1"
+    runs_india = SubElement(team_india, "runs")
+    runs_india.text = "250"
+    wicket_india = SubElement(team_india, "wicket")
+    wicket_india.text = "6"
+
+    # Add another Team element for country="India"
+    team_india_2 = SubElement(root, "Team", country="India")
+    player_india_2 = SubElement(team_india_2, "player")
+    player_india_2.text = "Player 2"
+    runs_india_2 = SubElement(team_india_2, "runs")
+    runs_india_2.text = "180"
+    wicket_india_2 = SubElement(team_india_2, "wicket")
+    wicket_india_2.text = "3"
+
+    # Write the modified tree back to the cricket.xml file
+    tree.write("cricket.xml")
+
+    print("Elements added for category country='India'.")
+
+# Create cricket.xml file with the provided structure
+create_cricket_xml()
+
+# Add multiple elements of category country="India"
+add_elements_for_india()
+
+Q2)
+import pandas as pd
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+# Download NLTK resources
+nltk.download('punkt')
+nltk.download('vader_lexicon')
+
+# Read the dataset from the provided URL
+url = "https://www.kaggle.com/datasets/seungguini/youtube-commentsfor-covid19-relatedvideos?select=covid_2021_1.csv"
+try:
+    df = pd.read_csv(url)
+    print("Dataset loaded successfully.")
+except Exception as e:
+    print("Error loading dataset:", e)
+    exit()
+
+# Data cleaning operations
+# Drop rows with missing values in the comment_text column
+cleaned_df = df.dropna(subset=['comment_text'])
+
+# Tokenize the comments into words
+cleaned_df['tokenized_comments'] = cleaned_df['comment_text'].apply(word_tokenize)
+
+# Initialize the VADER sentiment analyzer
+sia = SentimentIntensityAnalyzer()
+
+# Function to perform sentiment analysis on comments
+def analyze_sentiment(comment):
+    score = sia.polarity_scores(comment)
+    if score['compound'] >= 0.05:
+        return 'positive'
+    elif score['compound'] <= -0.05:
+        return 'negative'
+    else:
+        return 'neutral'
+
+# Perform sentiment analysis on comments
+cleaned_df['sentiment'] = cleaned_df['comment_text'].apply(analyze_sentiment)
+
+# Calculate the percentage of positive, negative, and neutral comments
+positive_percentage = (cleaned_df['sentiment'] == 'positive').mean() * 100
+negative_percentage = (cleaned_df['sentiment'] == 'negative').mean() * 100
+neutral_percentage = (cleaned_df['sentiment'] == 'neutral').mean() * 100
+
+# Print the results
+print("Sentiment Analysis Results:")
+print("Positive Comments Percentage:", positive_percentage)
+print("Negative Comments Percentage:", negative_percentage)
+print("Neutral Comments Percentage:", neutral_percentage)

@@ -1,0 +1,48 @@
+Q1)
+<?php
+// Load the XML file into a SimpleXML object
+$xml = simplexml_load_file("book.xml");
+
+// Display attributes and elements
+echo "Attributes:\n";
+foreach ($xml->attributes() as $key => $value) {
+    echo $key . ": " . $value . "\n";
+}
+
+echo "\nElements:\n";
+foreach ($xml->children() as $child) {
+    echo $child->getName() . ": " . $child . "\n";
+}
+?>
+
+Q2)
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import apriori, association_rules
+import pandas as pd
+
+# Given dataset
+dataset = {
+    1: ["bread", "milk"],
+    2: ["bread", "diaper", "beer", "eggs"],
+    3: ["milk", "diaper", "beer", "coke"],
+    4: ["bread", "milk", "diaper", "beer"],
+    5: ["bread", "milk", "diaper", "coke"]
+}
+
+# Convert the dataset into a list of lists
+transactions = [values for values in dataset.values()]
+
+# Convert categorical values into numeric format
+te = TransactionEncoder()
+te_ary = te.fit(transactions).transform(transactions)
+df = pd.DataFrame(te_ary, columns=te.columns_)
+
+# Apply Apriori algorithm to generate frequent itemsets
+min_support_values = [0.2, 0.3, 0.4]  # Different min_sup values to try
+for min_sup in min_support_values:
+    frequent_itemsets = apriori(df, min_support=min_sup, use_colnames=True)
+    print(f"Frequent Itemsets with min_sup={min_sup}:\n", frequent_itemsets)
+
+    # Generate association rules
+    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.6)
+    print(f"Association Rules with min_sup={min_sup}:\n", rules)

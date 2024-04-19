@@ -1,0 +1,79 @@
+Q1)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Name and Image Display</title>
+    <script>
+        function validateName() {
+            var studentName = document.getElementById("studentName").value;
+            var displayText = document.getElementById("displayText");
+            if (studentName.trim() !== "") {
+                displayText.style.color = "red";
+                displayText.style.fontSize = "18px";
+                displayText.innerHTML = studentName;
+            } else {
+                displayText.innerHTML = "";
+                document.getElementById("studentImage").style.display = "block";
+            }
+        }
+
+        function changeImageSize(size) {
+            document.getElementById("studentImage").style.width = size + "px";
+        }
+    </script>
+    <style>
+        #studentImage {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>Enter Student Name</h2>
+    <input type="text" id="studentName" onblur="validateName()" />
+    <p id="displayText"></p>
+    <img id="studentImage" src="https://via.placeholder.com/150" width="150" height="150" onmouseover="changeImageSize(200)" onmousedown="changeImageSize(100)" onmouseup="changeImageSize(150)" />
+</body>
+</html>
+
+Q2)
+from mlxtend.frequent_patterns import apriori
+from mlxtend.frequent_patterns import association_rules
+import pandas as pd
+
+# Create the dataset
+dataset = {
+    1: ["butter", "bread", "milk"],
+    2: ["butter", "flour", "milk", "sugar"],
+    3: ["butter", "eggs", "milk", "salt"],
+    4: ["eggs"],
+    5: ["butter", "flour", "milk", "salt"]
+}
+
+# Convert the dataset to a list of transactions
+transactions = []
+for key, value in dataset.items():
+    transactions.append(value)
+
+# Convert the transactions to a pandas DataFrame with one-hot encoding
+df = pd.get_dummies(pd.DataFrame(transactions), prefix="", prefix_sep="")
+
+# Apply the Apriori algorithm with different min_support values
+min_support_values = [0.2, 0.3, 0.4]
+for min_support in min_support_values:
+    # Generate frequent itemsets
+    frequent_itemsets = apriori(df, min_support=min_support, use_colnames=True)
+    
+    # Print frequent itemsets
+    print("Frequent Itemsets with min_support =", min_support)
+    print(frequent_itemsets)
+    print()
+    
+    # Generate association rules
+    rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1)
+    
+    # Print association rules
+    print("Association Rules with min_support =", min_support)
+    print(rules)
+    print("---------------------------------------------------")

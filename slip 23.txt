@@ -1,0 +1,103 @@
+Q1)
+Model (Student_model.php):
+
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Student_model extends CI_Model {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    // Function to get all records from the student table
+    public function get_all_students() {
+        $query = $this->db->get('student');
+        return $query->result(); // Return all records as an array of objects
+    }
+
+}
+
+Controller (StudentController.php):
+
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class StudentController extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->model('Student_model'); // Load the Student_model
+    }
+
+    public function display_students() {
+        // Get all records from the student table using the model
+        $data['students'] = $this->Student_model->get_all_students();
+
+        // Load the view to display the records
+        $this->load->view('student_records', $data);
+    }
+
+}
+
+View (student_records.php):
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Records</title>
+</head>
+<body>
+    <h1>Student Records</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Roll No</th>
+                <th>Name</th>
+                <th>Class</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($students as $student): ?>
+                <tr>
+                    <td><?php echo $student->rollno; ?></td>
+                    <td><?php echo $student->name; ?></td>
+                    <td><?php echo $student->class; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</body>
+</html>
+
+
+Q2)
+import re
+
+def preprocess_text(text):
+    # Remove special characters and digits using regex
+    processed_text = re.sub(r'[^a-zA-Z\s]', '', text)
+    # Remove extra whitespaces
+    processed_text = re.sub(r'\s+', ' ', processed_text)
+    # Convert to lowercase
+    processed_text = processed_text.lower()
+    return processed_text
+
+# Example text paragraph
+text_paragraph = """
+Natural language processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence 
+concerned with the interactions between computers and human language, in particular how to program computers 
+to process and analyze large amounts of natural language data. Stopwords are common words that are often removed 
+from text data as they usually don't carry significant meaning in the context of natural language processing tasks.
+12345 Special characters: @#$%^&*()_+ 67890
+"""
+
+# Preprocess the text
+processed_paragraph = preprocess_text(text_paragraph)
+
+print("Original text:")
+print(text_paragraph)
+
+print("\nProcessed text:")
+print(processed_paragraph)
